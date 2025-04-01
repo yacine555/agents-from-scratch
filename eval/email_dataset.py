@@ -1,49 +1,104 @@
 """Email evaluation dataset with ground truth classifications."""
 
-EMAIL_EVAL_SET = [
-    {
-        "email_input": {
-            "author": "Marketing Team <marketing@company.com>",
-            "to": "John Doe <john.doe@company.com>",
-            "subject": "🔥 Check out our latest newsletter!",
-            "email_thread": "Hi everyone,\n\nCheck out this month's company newsletter featuring our latest product updates and team highlights!\n\nDon't forget to subscribe to our social media channels for more updates.\n\nBest regards,\nMarketing Team"
-        },
-        "ground_truth": "ignore"
-    },
-    {
-        "email_input": {
-            "author": "Sarah Johnson <sarah.j@company.com>",
-            "to": "John Doe <john.doe@company.com>",
-            "subject": "Team meeting postponed to next week",
-            "email_thread": "Hi John,\n\nJust a heads up that our weekly team meeting will be postponed to next Monday due to several team members being out of office.\n\nPlease update your calendar accordingly.\n\nThanks,\nSarah"
-        },
-        "ground_truth": "notify"
-    },
-    {
-        "email_input": {
-            "author": "Michael Chen <m.chen@company.com>",
-            "to": "John Doe <john.doe@company.com>",
-            "subject": "Urgent: Help with deployment bug",
-            "email_thread": "Hi John,\n\nWe're facing a critical issue with the latest deployment. The authentication service is failing intermittently and users are reporting login problems.\n\nCould you help us troubleshoot this issue? It's affecting our main user flow.\n\nThanks,\nMike"
-        },
-        "ground_truth": "respond"
-    },
-    {
-        "email_input": {
-            "author": "Build System <ci@company.com>",
-            "to": "Dev Team <dev-team@company.com>",
-            "subject": "Build Failed: main branch (build #4256)",
-            "email_thread": "Build Failed: main branch (build #4256)\n\nThe following tests failed:\n- UserAuthenticationTest\n- PaymentProcessingTest\n\nCommit: a8e721f (Fix cart checkout process)\nAuthor: Alex Rivera\n\nSee detailed logs at: https://ci.company.com/builds/4256"
-        },
-        "ground_truth": "notify"
-    },
-    {
-        "email_input": {
-            "author": "Lisa Wong <l.wong@client.com>",
-            "to": "John Doe <john.doe@company.com>",
-            "subject": "Meeting request - Project Roadmap",
-            "email_thread": "Dear John,\n\nI'd like to schedule a meeting to discuss the roadmap for our collaboration on Project Falcon.\n\nWould you be available sometime next week? I'm flexible on Tuesday or Thursday afternoon.\n\nBest regards,\nLisa Wong\nClient Success Manager\nABC Client Inc."
-        },
-        "ground_truth": "respond"
-    }
+# Dataset examples
+email_input_1 = {
+    "author": "Alice Smith <alice.smith@company.com>",
+    "to": "John Doe <john.doe@company.com>",
+    "subject": "Quick question about API documentation",
+    "email_thread": """Hi John,
+
+I was reviewing the API documentation for the new authentication service and noticed a few endpoints seem to be missing from the specs. Could you help clarify if this was intentional or if we should update the docs?
+
+Specifically, I'm looking at:
+- /auth/refresh
+- /auth/validate
+
+Thanks!
+Alice""",
+}
+
+email_input_2 = {
+    "author": "Marketing Team <marketing@company.com>",
+    "to": "All Staff <all-staff@company.com>",
+    "subject": "New Company Newsletter Available",
+    "email_thread": """Hello everyone,
+
+The latest edition of our company newsletter is now available on the intranet. This month features articles on our Q2 results, upcoming team building activities, and employee spotlights.
+
+Check it out when you have a chance!
+
+Best regards,
+Marketing Team""",
+}
+
+email_input_3 = {
+    "author": "System Admin <sysadmin@company.com>",
+    "to": "Development Team <dev@company.com>",
+    "subject": "Scheduled maintenance - database downtime",
+    "email_thread": """Hi team,
+
+This is a reminder that we'll be performing scheduled maintenance on the production database tonight from 2AM to 4AM EST. During this time, all database services will be unavailable.
+
+Please plan your work accordingly and ensure no critical deployments are scheduled during this window.
+
+Thanks,
+System Admin Team""",
+}
+
+email_input_4 = {
+    "author": "Project Manager <pm@client.com>",
+    "to": "John Doe <john.doe@company.com>",
+    "subject": "URGENT: Critical bug in production",
+    "email_thread": """John,
+
+We've discovered a critical bug in the payment processing module that's causing transactions to fail for some customers. This is affecting our revenue and causing customer complaints.
+
+Can you please look into this ASAP and provide an estimate for a fix? This is our highest priority right now.
+
+Regards,
+Project Manager""",
+}
+
+email_input_5 = {
+    "author": "HR Department <hr@company.com>",
+    "to": "John Doe <john.doe@company.com>",
+    "subject": "Reminder: Submit your expense reports",
+    "email_thread": """Hello John,
+
+This is a friendly reminder that all expense reports for the previous month need to be submitted by this Friday. Please make sure to include all receipts and proper documentation.
+
+If you have any questions about the submission process, feel free to reach out to the HR team.
+
+Best regards,
+HR Department""",
+}
+
+# Outputs options "ignore", "notify", "respond"
+triage_output_1 = "respond"
+triage_output_2 = "ignore"
+triage_output_3 = "notify"
+triage_output_4 = "respond"
+triage_output_5 = "notify"
+
+examples = [
+  {
+      "inputs": {"email_input": email_input_1},
+      "outputs": {"classification": triage_output_1},
+  },
+  {
+      "inputs": {"email_input": email_input_2},
+      "outputs": {"classification": triage_output_2},
+  },
+  {
+      "inputs": {"email_input": email_input_3},
+      "outputs": {"classification": triage_output_3},
+  },
+  {
+      "inputs": {"email_input": email_input_4},
+      "outputs": {"classification": triage_output_4},
+  },
+  {
+      "inputs": {"email_input": email_input_5},
+      "outputs": {"classification": triage_output_5},
+  },
 ]

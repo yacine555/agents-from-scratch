@@ -1,3 +1,34 @@
+from langchain_core.messages import convert_to_openai_messages
+
+def format_messages(messages):
+    """Format a list of chat messages into a readable string format.
+    
+    Args:
+        messages (List[ChatMessage]): A list of message dictionaries containing fields like 
+            'role', 'content', etc. Each message should follow the ChatMessage format.
+    
+    Returns:
+        str: A formatted string where each message is separated by === Message { } === blocks,
+            with each field indented and displayed on a new line.
+    """
+    messages = convert_to_openai_messages(messages)
+    formatted_output = ""
+    
+    for message in messages:
+        # Get role and content
+        role = message.get("role", "unknown").capitalize()
+        content = message.get("content", "")
+        
+        # Create header with equal signs
+        header = f" {role} Message "
+        line = "=" * 32 + header + "=" * 32
+        
+        # Format message with header and content
+        message_str = f"{line}\n\n{content}\n\n"
+        formatted_output += message_str
+    
+    return formatted_output.strip()
+
 def parse_email(email_input: dict) -> dict:
     """Parse an email input dictionary.
 

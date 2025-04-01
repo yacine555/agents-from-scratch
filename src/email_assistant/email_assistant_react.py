@@ -4,8 +4,8 @@ from langchain.chat_models import init_chat_model
 from langchain_core.tools import tool
 from langgraph.prebuilt import create_react_agent
 
-from email_assistant.prompts import agent_system_prompt_react, prompt_instructions
-from email_assistant.schemas import profile
+from src.email_assistant.prompts import agent_system_prompt_react, prompt_instructions
+from src.email_assistant.schemas import profile
 
 from langgraph.graph import MessagesState, StateGraph, START, END
 
@@ -63,3 +63,6 @@ agent = (
     .add_edge(START, "response_agent")
     .compile()
 )
+
+# Export the agent for use in evaluation
+email_assistant_react = agent

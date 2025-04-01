@@ -58,7 +58,7 @@ if config.use_semantic_memory: # TODO: Is this correct?
     manage_memory_tool = create_manage_memory_tool(namespace=("email_assistant", "{langgraph_user_id}", "collection"))
     search_memory_tool = create_search_memory_tool(namespace=("email_assistant", "{langgraph_user_id}", "collection"))
     # Add semantic memory tools
-    tools.append(manage_memory_tool, search_memory_tool)
+    tools.extend([manage_memory_tool, search_memory_tool])
     # Update prompt
     prompt = agent_system_prompt_memory
 
@@ -150,3 +150,6 @@ agent = (
     .add_edge(START, "triage_router")
     .compile()
 )
+
+# Export the agent for use in evaluation
+email_assistant = agent

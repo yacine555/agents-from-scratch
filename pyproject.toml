@@ -7,9 +7,11 @@ dependencies = [
     "langchain",
     "langchain-anthropic",
     "langgraph",
-    "langmem"
-    "openevals"
-    "langsmith"
+    "langmem",
+    "openevals",
+    "langsmith",
+    "pandas",
+    "matplotlib"
 ]
 
 [project.optional-dependencies]
