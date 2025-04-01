@@ -8,6 +8,8 @@ dependencies = [
     "langchain-anthropic",
     "langgraph",
     "langmem"
+    "openevals"
+    "langsmith"
 ]
 
 [project.optional-dependencies]

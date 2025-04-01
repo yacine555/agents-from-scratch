@@ -4,8 +4,8 @@ from langchain.chat_models import init_chat_model
 from langchain_core.tools import tool
 from langgraph.prebuilt import create_react_agent
 
-from email_assistant.prompts import triage_system_prompt, triage_user_prompt, agent_system_prompt, agent_system_prompt_memory
-from email_assistant.state import State, RouterSchema
+from email_assistant.prompts import triage_system_prompt, triage_user_prompt, agent_system_prompt, agent_system_prompt_memory, prompt_instructions
+from email_assistant.schemas import State, RouterSchema, profile
 from email_assistant.utils import parse_email
 from email_assistant.configuration import Configuration
 from langmem import create_manage_memory_tool, create_search_memory_tool
@@ -17,23 +17,7 @@ from langgraph.types import Command
 llm = init_chat_model("anthropic:claude-3-5-sonnet-latest")
 
 # We'll use structured output to generate classification results
-llm_router = llm.with_structured_output(RouterSchema)
-
-# TODO: Move these to memory
-profile = {
-    "name": "John",
-    "full_name": "John Doe",
-    "user_profile_background": "Senior software engineer leading a team of 5 developers",
-}
-
-prompt_instructions = {
-    "triage_rules": {
-        "ignore": "Marketing newsletters, spam emails, mass company announcements",
-        "notify": "Team member out sick, build system notifications, project status updates",
-        "respond": "Direct questions from team members, meeting requests, critical bug reports",
-    },
-    "agent_instructions": "Use these tools when appropriate to help manage John's tasks efficiently."
-}
+llm_router = llm.with_structured_output(RouterSchema) 
 
 # Agent tools 
 @tool
@@ -118,7 +102,10 @@ def triage_router(state: State) -> Command[Literal["response_agent", "__end__"]]
         print("📧 Classification: RESPOND - This email requires a response")
         goto = "response_agent"
         update = {
-            "messages": [
+            "messages": [{
+                    "role": "user",
+                    "content": f"Classification Decision: {result.classification}",
+                },
                 {
                     "role": "user",
                     "content": f"Respond to the email {state['email_input']}",
@@ -128,17 +115,32 @@ def triage_router(state: State) -> Command[Literal["response_agent", "__end__"]]
         }
     elif result.classification == "ignore":
         print("🚫 Classification: IGNORE - This email can be safely ignored")
-        update = {"classification_decision": result.classification}
+        update =  {
+            "messages": [
+                {
+                    "role": "user",
+                    "content": f"Classification Decision: {result.classification}"
+                }
+            ],
+            "classification_decision": result.classification,
+        }
         goto = END
     elif result.classification == "notify":
         # If real life, this would do something else
         print("🔔 Classification: NOTIFY - This email contains important information")
-        update = {"classification_decision": result.classification}
+        update = {
+            "messages": [
+                {
+                    "role": "user",
+                    "content": f"Classification Decision: {result.classification}"
+                }
+            ],
+            "classification_decision": result.classification,
+        }
         goto = END
     else:
         raise ValueError(f"Invalid classification: {result.classification}")
     return Command(goto=goto, update=update)
-
 
 # Build workflow
 agent = (

@@ -22,6 +22,37 @@ def parse_email(email_input: dict) -> dict:
         email_input["email_thread"],
     )
 
+def extract_message_content(message) -> str:
+    """Extract content from different message types as clean string.
+    
+    Args:
+        message: A message object (HumanMessage, AIMessage, ToolMessage)
+        
+    Returns:
+        str: Extracted content as clean string
+    """
+    content = message.content
+    
+    # Check for recursion marker in string
+    if isinstance(content, str) and '<Recursion on AIMessage with id=' in content:
+        return "[Recursive content]"
+    
+    # Handle string content
+    if isinstance(content, str):
+        return content
+        
+    # Handle list content (AIMessage format)
+    elif isinstance(content, list):
+        text_parts = []
+        for item in content:
+            if isinstance(item, dict) and 'text' in item:
+                text_parts.append(item['text'])
+        return "\n".join(text_parts)
+    
+    # Don't try to handle recursion to avoid infinite loops
+    # Just return string representation instead
+    return str(content)
+
 def format_few_shot_examples(examples):
     """Format examples into a readable string representation.
 

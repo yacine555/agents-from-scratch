@@ -19,3 +19,10 @@ class State(TypedDict):
     classification_decision: Literal["ignore", "respond", "notify"]
     messages: Annotated[list, add_messages]
     use_semantic_memory: bool
+
+# User profile
+profile = {
+    "name": "John",
+    "full_name": "John Doe",
+    "user_profile_background": "Senior software engineer leading a team of 5 developers",
+}
