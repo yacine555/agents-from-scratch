@@ -4,6 +4,25 @@ In this workshop, we will build an email assistant that can triage incoming emai
 
 ## Environment Setup 
 
+### Prerequisites
+1. Set up your LangSmith API key as an environment variable:
+   ```bash
+   export LANGCHAIN_API_KEY=your_langsmith_api_key
+   ```
+2. Set up your OpenAI API key (default LLM used for the Evaluator):
+   ```bash
+   export OPENAI_API_KEY=your_openai_api_key
+   ```
+3. Set up your Anthropic API key (default LLM used for the E-mail Assistant):
+   ```bash
+   export ANTHROPIC_API_KEY=your_anthropic_api_key
+   ```
+
+For each, you can use any model support by `init_chat_model` shown [here](https://python.langchain.com/api_reference/langchain/chat_models/langchain.chat_models.base.init_chat_model.html) and simply modify the `llm` variable in the respective files:
+* `src/email_assistant/email_assistant_react.py`
+* `src/email_assistant/email_assistant.py`
+* `eval/evaluate_triage.py`
+
 Create a virtual environment and activate it:
 ```shell
 $ python3 -m venv .venv
@@ -50,6 +69,8 @@ Install uv package manager and start LangGraph Platform server locally:
 curl -LsSf https://astral.sh/uv/install.sh | sh
 uvx --refresh --from "langgraph-cli[inmem]" --with-editable . --python 3.11 langgraph dev
 ```
+
+![Screenshot 2025-04-01 at 3 38 24 PM](https://github.com/user-attachments/assets/f93aa02e-5497-440e-9040-eb149701226b)
 
 Here we can see the two assistants easily and test them.
 
@@ -107,6 +128,47 @@ The evaluation framework in the `eval` folder compares the performance of both a
    - Generates a comparative bar chart showing performance of both approaches
    - Saves results to `eval/results/` with timestamps
    - Provides clear metrics on which assistant performed better
+
+### Run Evaluation 
+
+To evaluate the performance of both email assistant implementations, follow these steps:
+
+#### Prerequisites
+1. Set up your LangSmith API key as an environment variable:
+   ```bash
+   export LANGCHAIN_API_KEY=your_langsmith_api_key
+   ```
+
+2. Set up your OpenAI API key (required for the evaluator):
+   ```bash
+   export OPENAI_API_KEY=your_openai_api_key
+   ```
+
+#### Running the Evaluation
+Execute the evaluation script:
+```bash
+python -m eval.evaluate_triage
+```
+
+This script will:
+1. Create a dataset in LangSmith with test emails defined in `eval/email_dataset.py` (if it doesn't exist)
+2. Run both the workflow-based and ReAct-based email assistants against this dataset
+3. Evaluate each assistant's performance using an LLM-as-judge approach with the prompt from `eval/prompt.py`
+4. Generate a visual comparison of the results and save it to `eval/results/`
+5. Print the performance scores of both assistants in the terminal
+
+#### Understanding the Results
+The evaluation measures how well each assistant correctly classifies emails as "respond", "notify", or "ignore". Results are scored on a 0-1 scale, where higher scores indicate better performance.
+
+#### Viewing Results in LangSmith
+After running the evaluation, you can view detailed results in the LangSmith dashboard:
+1. Go to [LangSmith](https://smith.langchain.com/)
+2. Navigate to the "Datasets" section to find the "Interrupt Workshop: E-mail Triage Dataset"
+3. View the results of each experiment to see detailed performance breakdowns
+
+You can also find an example dataset with previous evaluation results [here](https://smith.langchain.com/public/1e3765c9-3455-4243-bb75-e4d865cc5960/d).
+
+![Screenshot 2025-04-01 at 3 04 05 PM](https://github.com/user-attachments/assets/0545212b-4563-4ca8-a748-abe31c84ee18)
 
 ## Human-in-the-loop 
 
