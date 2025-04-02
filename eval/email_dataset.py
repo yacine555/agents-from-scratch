@@ -73,14 +73,21 @@ Best regards,
 HR Department""",
 }
 
-# Outputs options "ignore", "notify", "respond"
+# Triage outputs: "ignore", "notify", "respond"
 triage_output_1 = "respond"
 triage_output_2 = "ignore"
 triage_output_3 = "notify"
 triage_output_4 = "respond"
 triage_output_5 = "notify"
 
-examples = [
+# End-to-end response outputs (when applicable)
+response_output_1 = "I've updated the docs with the missing endpoints. Let me know if you need anything else."
+response_output_2 = "No response is needed. For evaluation purposes, just confirm that the agent is to ignore."
+response_output_3 = "No response is needed. For evaluation purposes, just confirm that the agent is to notify."
+response_output_4 = "I've fixed the bug! Let me know if you need anything else."
+response_output_5 = "No response is needed. For evaluation purposes, just confirm that the agent is to notify."
+
+examples_triage = [
   {
       "inputs": {"email_input": email_input_1},
       "outputs": {"classification": triage_output_1},
@@ -100,5 +107,28 @@ examples = [
   {
       "inputs": {"email_input": email_input_5},
       "outputs": {"classification": triage_output_5},
+  },
+]
+
+examples_response = [
+  {
+      "inputs": {"email_input": email_input_1},
+      "outputs": {"response": response_output_1},
+  },
+  {
+      "inputs": {"email_input": email_input_2},
+      "outputs": {"response": response_output_2},
+  },
+  {
+      "inputs": {"email_input": email_input_3},
+      "outputs": {"response": response_output_3},
+  },
+  {
+      "inputs": {"email_input": email_input_4},
+      "outputs": {"response": response_output_4},
+  },
+  {
+      "inputs": {"email_input": email_input_5},
+      "outputs": {"response": response_output_5},
   },
 ]

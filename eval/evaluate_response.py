@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 from openevals.llm import create_llm_as_judge
-from eval.prompt import TRIAGE_CLASSIFICATION_PROMPT
-from eval.email_dataset import examples_triage
+from eval.prompt import RESPONSE_QUALITY_PROMPT
+from eval.email_dataset import examples_response
 
 from email_assistant.email_assistant import email_assistant
 from email_assistant.email_assistant_react import email_assistant_react
@@ -17,7 +17,7 @@ from email_assistant.utils import format_messages
 client = Client()
 
 # Dataset name
-dataset_name = "Interrupt Workshop: E-mail Triage Dataset"
+dataset_name = "Interrupt Workshop: E-mail Response Dataset"
 
 # If the dataset doesn't exist, create it
 if not client.has_dataset(dataset_name=dataset_name):
@@ -25,11 +25,11 @@ if not client.has_dataset(dataset_name=dataset_name):
     # Create the dataset
     dataset = client.create_dataset(
         dataset_name=dataset_name, 
-        description="A dataset of e-mails and their triage decisions."
+        description="A dataset of e-mails and their response quality evaluations."
     )
 
     # Add examples to the dataset
-    client.create_examples(dataset_id=dataset.id, examples=examples_triage)
+    client.create_examples(dataset_id=dataset.id, examples=examples_response)
 
 # Target functions that run our email assistants
 def target_email_assistant(inputs: dict) -> dict:
@@ -58,27 +58,27 @@ def target_email_assistant_react(inputs: dict) -> dict:
     return format_messages(response['messages'])
 
 ## Evaluator 
-feedback_key = "classification" # Key saved to langsmith
+feedback_key = "response_quality" # Key saved to langsmith
 
-def classification_evaluator(inputs: dict, outputs: dict, reference_outputs: dict) -> dict:
-    """Evaluate the assistant's email classification against reference outputs.
+def response_quality_evaluator(inputs: dict, outputs: dict, reference_outputs: dict) -> dict:
+    """Evaluate the assistant's email response quality against reference outputs.
     
-    This evaluator uses LLM-as-judge to compare the model's classification 
-    with the reference classification. It evaluates:
-    - Whether the assistant correctly classified the email
-    - The quality of the assistant's reasoning
+    This evaluator uses LLM-as-judge to compare the model's response 
+    with the reference response. It evaluates:
+    - Whether the assistant correctly handled the response
+    - The quality and appropriateness of the assistant's response
     
     Args:
         inputs: The original email input from the dataset
         outputs: The assistant's response from the target function
-        reference_outputs: The ground truth classification from the dataset
+        reference_outputs: The ground truth response from the dataset
         
     Returns:
         An evaluation result with feedback on the assistant's performance
     """
 
     evaluator = create_llm_as_judge(
-        prompt=TRIAGE_CLASSIFICATION_PROMPT,
+        prompt=RESPONSE_QUALITY_PROMPT,
         feedback_key=feedback_key, 
         continuous=True, # Set 0-1 scale by default
         model="openai:o3-mini",
@@ -93,7 +93,7 @@ experiment_results_react = client.evaluate(
     data=dataset_name,
     # Evaluator
     evaluators=[
-        classification_evaluator
+        response_quality_evaluator
     ],
     # Name of the experiment
     experiment_prefix="E-mail assistant react", 
@@ -108,7 +108,7 @@ experiment_results_workflow = client.evaluate(
     data=dataset_name,
     # Evaluator
     evaluators=[
-        classification_evaluator
+        response_quality_evaluator
     ],
     # Name of the experiment
     experiment_prefix="E-mail assistant workflow", 
@@ -136,7 +136,7 @@ plt.bar(models, scores, color=['#5DA5DA', '#FAA43A'], width=0.5)
 # Add labels and title
 plt.xlabel('Agent Type')
 plt.ylabel('Average Score')
-plt.title(f'Email Triage Performance Comparison - {feedback_key.capitalize()} Score')
+plt.title(f'Email Response Quality Comparison')
 
 # Add score values on top of bars
 for i, score in enumerate(scores):
@@ -153,11 +153,10 @@ os.makedirs('eval/results', exist_ok=True)
 
 # Save the plot with timestamp
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-plot_path = f'eval/results/triage_comparison_{timestamp}.png'
+plot_path = f'eval/results/response_comparison_{timestamp}.png'
 plt.savefig(plot_path)
 plt.close()
 
 print(f"\nEvaluation visualization saved to: {plot_path}")
 print(f"ReAct Agent Score: {react_score:.2f}")
 print(f"Workflow Agent Score: {workflow_score:.2f}")
-

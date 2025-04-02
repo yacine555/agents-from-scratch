@@ -112,20 +112,27 @@ To unsubscribe, click here
 
 ### Structure 
 
-The evaluation framework in the `eval` folder compares the performance of both assistant implementations on the email triage task:
+The evaluation framework in the `eval` folder compares the performance of both assistant implementations on two key aspects:
 
-1. **Dataset**: A collection of sample emails with ground truth classifications is defined in `email_dataset.py`
+1. **Dataset**: A collection of sample emails with ground truth classifications and responses is defined in `email_dataset.py`
 
-2. **Evaluation Process** (`evaluate_triage.py`):
+2. **Email Triage Evaluation** (`evaluate_triage.py`):
    - Uses LangSmith to run and track evaluations
    - Creates a dataset of test emails if it doesn't exist
    - Runs both assistant implementations against the dataset
-   - Uses an LLM-as-judge approach with a specialized prompt from `prompt.py`
+   - Uses an LLM-as-judge approach with the `TRIAGE_CLASSIFICATION_PROMPT` from `prompt.py`
    - Evaluates whether each assistant correctly classified emails
    - Scores assistants on a 0-1 scale
 
-3. **Visualization**:
-   - Generates a comparative bar chart showing performance of both approaches
+3. **Email Response Evaluation** (`evaluate_response.py`):
+   - Uses the same LangSmith evaluation framework
+   - Creates a response quality dataset if it doesn't exist
+   - Uses the `RESPONSE_QUALITY_PROMPT` to evaluate response quality
+   - Assesses how well each assistant crafts appropriate responses
+   - Scores response quality on a 0-1 scale
+
+4. **Visualization**:
+   - Each evaluation generates a comparative bar chart showing performance of both approaches
    - Saves results to `eval/results/` with timestamps
    - Provides clear metrics on which assistant performed better
 
@@ -144,8 +151,8 @@ To evaluate the performance of both email assistant implementations, follow thes
    export OPENAI_API_KEY=your_openai_api_key
    ```
 
-#### Running the Evaluation
-Execute the evaluation script:
+#### Running the Triage Evaluation
+Execute the triage evaluation script:
 ```bash
 python -m eval.evaluate_triage
 ```
@@ -153,17 +160,25 @@ python -m eval.evaluate_triage
 This script will:
 1. Create a dataset in LangSmith with test emails defined in `eval/email_dataset.py` (if it doesn't exist)
 2. Run both the workflow-based and ReAct-based email assistants against this dataset
-3. Evaluate each assistant's performance using an LLM-as-judge approach with the prompt from `eval/prompt.py`
+3. Evaluate each assistant's performance using an LLM-as-judge approach
 4. Generate a visual comparison of the results and save it to `eval/results/`
 5. Print the performance scores of both assistants in the terminal
 
+#### Running the Response Quality Evaluation
+Execute the response quality evaluation script:
+```bash
+python -m eval.evaluate_response
+```
+
+This script follows the same approach but focuses on evaluating the quality and appropriateness of email responses.
+
 #### Understanding the Results
-The evaluation measures how well each assistant correctly classifies emails as "respond", "notify", or "ignore". Results are scored on a 0-1 scale, where higher scores indicate better performance.
+The triage evaluation measures how well each assistant correctly classifies emails as "respond", "notify", or "ignore". The response evaluation measures the quality and appropriateness of the responses generated. Both use a 0-1 scale, where higher scores indicate better performance.
 
 #### Viewing Results in LangSmith
-After running the evaluation, you can view detailed results in the LangSmith dashboard:
+After running the evaluations, you can view detailed results in the LangSmith dashboard:
 1. Go to [LangSmith](https://smith.langchain.com/)
-2. Navigate to the "Datasets" section to find the "Interrupt Workshop: E-mail Triage Dataset"
+2. Navigate to the "Datasets" section to find the relevant datasets
 3. View the results of each experiment to see detailed performance breakdowns
 
 You can also find an example dataset with previous evaluation results [here](https://smith.langchain.com/public/1e3765c9-3455-4243-bb75-e4d865cc5960/d).
