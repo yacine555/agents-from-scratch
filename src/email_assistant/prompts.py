@@ -105,6 +105,7 @@ To: {to}
 Subject: {subject}
 {email_thread}"""
 
+# TODO: Load into memory 
 prompt_instructions = {
     "triage_rules": {
         "ignore": "Marketing newsletters, spam emails, mass company announcements",

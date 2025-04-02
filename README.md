@@ -72,39 +72,37 @@ uvx --refresh --from "langgraph-cli[inmem]" --with-editable . --python 3.11 lang
 
 ![Screenshot 2025-04-01 at 3 38 24 PM](https://github.com/user-attachments/assets/f93aa02e-5497-440e-9040-eb149701226b)
 
-Here we can see the two assistants easily and test them.
+Here we can see the two assistants easily and test them. You will see in the `langgrah.json` that we point to the compiled graphs that we want to load.
+```shell
+  "graphs": {
+      "email_assistant": "./src/email_assistant/email_assistant.py:email_assistant",
+      "email_assistant_react": "./src/email_assistant/email_assistant_react.py:email_assistant_react"
+    },
+```
 
-Pass in an example email to either assistant to see the output:
+In studio, you can test some email inputs directly to see what the assistant will do:
+```shell
+{"author": "Alice Smith <alice.smith@company.com>",
+  "to": "John Doe <john.doe@company.com>",
+  "subject": "Quick question about API documentation",
+  "email_thread": "Hi John, I was reviewing the API documentation for the new authentication service and noticed a few endpoints seem to be missing from the specs. Could you help clarify if this was intentional or if we should update the docs? Specifically, I'm looking at: /auth/refres /auth/validate Thanks! Alice"}
+```
+
 ```shell
 {
     "author": "Marketing Team <marketing@amazingdeals.com>",
     "to": "John Doe <john.doe@company.com>",
     "subject": "🔥 EXCLUSIVE OFFER: Limited Time Discount on Developer Tools! 🔥",
-    "email_thread": """Dear Valued Developer,
+    "email_thread": "Dear Valued Developer,\n\nDon't miss out on this INCREDIBLE opportunity! \n\n🚀 For a LIMITED TIME ONLY, get 80% OFF on our Premium Developer Suite! \n\n✨ FEATURES:\n- Revolutionary AI-powered code completion\n- Cloud-based development environment\n- 24/7 customer support\n- And much more!\n\n💰 Regular Price: $999/month\n🎉 YOUR SPECIAL PRICE: Just $199/month!\n\n🕒 Hurry! This offer expires in:\n24 HOURS ONLY!\n\nClick here to claim your discount: https://amazingdeals.com/special-offer\n\nBest regards,\nMarketing Team\n---\nTo unsubscribe, click here"
+}
+```
 
-Don't miss out on this INCREDIBLE opportunity! 
-
-🚀 For a LIMITED TIME ONLY, get 80% OFF on our Premium Developer Suite! 
-
-✨ FEATURES:
-- Revolutionary AI-powered code completion
-- Cloud-based development environment
-- 24/7 customer support
-- And much more!
-
-💰 Regular Price: $999/month
-🎉 YOUR SPECIAL PRICE: Just $199/month!
-
-🕒 Hurry! This offer expires in:
-24 HOURS ONLY!
-
-Click here to claim your discount: https://amazingdeals.com/special-offer
-
-Best regards,
-Marketing Team
----
-To unsubscribe, click here
-""",
+```shell
+{
+    "author": "System Admin <sysadmin@company.com>",
+    "to": "Development Team <dev@company.com>",
+    "subject": "Scheduled maintenance - database downtime",
+    "email_thread": "Hi team,\n\nThis is a reminder that we'll be performing scheduled maintenance on the production database tonight from 2AM to 4AM EST. During this time, all database services will be unavailable.\n\nPlease plan your work accordingly and ensure no critical deployments are scheduled during this window.\n\nThanks,\nSystem Admin Team"
 }
 ```
 
@@ -187,6 +185,39 @@ You can also find an example dataset with previous evaluation results [here](htt
 
 ## Human-in-the-loop 
 
+### Adding HITL to the Workflow 
+
+To add HITL to the workflow, we need to modify the `langgraph.json` file to point to the new graph that includes HITL: 
+```shell
+  "graphs": {
+      "email_assistant": "./src/email_assistant/email_assistant.py:email_assistant_hitl",
+    },
+```
+
+This allows us to interrupt the workflow after the triage decision and review it! For this, we use [Agent Inbox](https://github.com/langchain-ai/agent-inbox). First, start the server:
+```shell
+$ langgraph dev 
+```
+
+Then, open: 
+```
+https://dev.agentinbox.ai/
+```
+
+Select `add inbox` provide it:
+* Graph name: the name from the `langgraph.json` file (`email_assistant`)
+* Graph URL: `http://127.0.0.1:2024/`
+
+Pass any of the the above inputs to your assistant in Studio, and you will see the thread in Agent Inbox. You can review the triage decision and respond to the email. 
+
+< Add screenshot >
+
 ## Memory 
 
+TODO: Add memory to the workflow. 
+
 ## Deployment 
+
+The graph already can be run with LangGraph Platform locally using the `langgraph dev` command. 
+
+TODO: Add remote deployment instructions. 

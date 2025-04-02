@@ -1,7 +1,7 @@
 {
     "dockerfile_lines": [],
     "graphs": {
-      "email_assistant": "./src/email_assistant/email_assistant.py:agent",
+      "email_assistant": "./src/email_assistant/email_assistant.py:email_assistant_hitl",
       "email_assistant_react": "./src/email_assistant/email_assistant_react.py:agent"
     },
     "python_version": "3.11",

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing_extensions import TypedDict, Literal, Annotated
+from typing_extensions import TypedDict, Literal, Annotated, Optional
 from langgraph.graph import add_messages
 
 class RouterSchema(BaseModel):
@@ -20,7 +20,23 @@ class State(TypedDict):
     messages: Annotated[list, add_messages]
     use_semantic_memory: bool
 
-# User profile
+# Define schemas for Agent Inbox integration
+class HumanInterruptConfig(TypedDict):
+    allow_ignore: bool
+    allow_respond: bool
+    allow_edit: bool
+    allow_accept: bool
+
+class ActionRequest(TypedDict):
+    action: str
+    args: dict
+
+class HumanInterrupt(TypedDict):
+    action_request: ActionRequest
+    config: HumanInterruptConfig
+    description: Optional[str]
+
+# TODO: Load into memory 
 profile = {
     "name": "John",
     "full_name": "John Doe",

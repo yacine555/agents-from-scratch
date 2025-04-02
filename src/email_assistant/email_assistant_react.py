@@ -57,12 +57,9 @@ agent = create_react_agent(
 )
 
 # Build workflow
-agent = (
+email_assistant_react = (
     StateGraph(MessagesState)
     .add_node("response_agent", agent)
     .add_edge(START, "response_agent")
     .compile()
 )
-
-# Export the agent for use in evaluation
-email_assistant_react = agent
