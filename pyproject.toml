@@ -2,7 +2,7 @@
 name = "interrupt_workshop"
 version = "0.1.0"
 description = "Workshop for Interrupt Conference"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 dependencies = [
     "langchain>=0.3.9",
     "langchain-core>=0.3.59",
