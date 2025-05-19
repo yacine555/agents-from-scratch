@@ -1,15 +1,13 @@
-# Interrupt Workshop Codebase Overview
-
-This repository contains materials for building and understanding intelligent agents using LangGraph. The codebase focuses on an email assistant that can triage and respond to emails, with extensions for human-in-the-loop feedback and memory.
+# Agents in this Repository
 
 ## Overview
 
-The codebase is organized into four main sections:
-
-1. **Basic Agent** - Email assistant that can triage and respond to emails
-2. **Evaluation** - Tools for evaluating agent performance
-3. **Human-in-the-Loop** - Adding human feedback to the agent
-4. **Memory** - Enabling the agent to learn from past interactions
+This repository demonstrates building agents using LangGraph, focusing on an email assistant that can:
+- Triage incoming emails
+- Draft appropriate responses
+- Execute actions (calendar scheduling, etc.)
+- Incorporate human feedback
+- Learn from past interactions
 
 ## Environment Setup
 
@@ -25,38 +23,55 @@ python3 -m pip install --upgrade pip
 pip install -e .
 ```
 
+## Agent Implementations
+
+### Scripts 
+
+The repository contains several implementations with increasing complexity in `src/email_assistant`:
+
+1. **LangGraph 101** (`langgraph_101.py`)
+   - Basics of LangGraph 
+
+2. **Basic Email Assistant** (`email_assistant.py`)
+   - Core email triage and response functionality
+
+3. **Human-in-the-Loop** (`email_assistant_hitl.py`) 
+   - Adds ability for humans to review and approve actions
+
+4. **Memory-Enabled HITL** (`email_assistant_hitl_memory.py`)
+   - Adds persistent memory to learn from feedback
+
+5. **Gmail Integration** (`email_assistant_hitl_memory_gmail.py`)
+   - Connects to Gmail API for real email processing
+
+### Notebooks
+
+Each aspect of the agent is explained in dedicated notebooks:
+- `notebooks/langgraph_101.ipynb` - LangGraph basics
+- `notebooks/agent.ipynb` - Basic agent implementation
+- `notebooks/evaluation.ipynb` - Agent evaluation
+- `notebooks/hitl.ipynb` - Human-in-the-loop functionality
+- `notebooks/memory.ipynb` - Adding memory capabilities
+
 ## Running Tests
 
-Execute the test suite with:
+### Testing Scripts
+
+Test to ensure all implementations work:
 
 ```bash
-# Run tests for the default implementation
-python tests/run_all_tests.py
-
-# Run tests for a specific implementation
-python tests/run_all_tests.py --implementation email_assistant_hitl
-
-# Run tests for all available implementations
+# Test all implementations
 python tests/run_all_tests.py --all
-
-# Add a specific experiment name for LangSmith tracking
-python tests/run_all_tests.py --experiment-name "Custom Test Run"
 ```
+
+(Note: This will leave out the Gmail implementation `email_assistant_hitl_memory_gmail` from testing.)
 
 ### Testing Notebooks
 
-You can also run tests to verify all notebooks execute without errors:
+Test all notebooks to ensure they run without errors:
 
 ```bash
 # Run all notebook tests directly
 python tests/test_notebooks.py
-
-# Or run via pytest
-pytest tests/test_notebooks.py -v
 ```
 
-Tests require:
-- OpenAI API key
-- LangSmith API key (for evaluation tracking)
-
-Set these in a `.env` file or as environment variables.
