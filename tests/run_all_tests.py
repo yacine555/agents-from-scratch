@@ -27,7 +27,6 @@ def main():
         "email_assistant",
         "email_assistant_hitl",
         "email_assistant_hitl_memory",
-        "email_assistant_hitl_memory_gmail"
     ]
     
     # Determine which implementations to test

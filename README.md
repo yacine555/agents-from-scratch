@@ -148,6 +148,18 @@ The available implementations for testing are:
 - `email_assistant_hitl_memory` - Memory-enabled HITL version
 - `email_assistant_hitl_memory_gmail` - Gmail-integrated version
 
+### Testing Notebooks
+
+You can also run tests to verify all notebooks execute without errors:
+
+```shell
+# Run all notebook tests
+python tests/test_notebooks.py
+
+# Or run via pytest
+pytest tests/test_notebooks.py -v
+```
+
 ## Future Extensions
 
 Add [LangMem](https://langchain-ai.github.io/langmem/) to manage memories:
