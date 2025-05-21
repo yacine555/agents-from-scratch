@@ -55,6 +55,8 @@ $ python3 -m pip install --upgrade pip
 $ pip install -e .
 ```
 
+> **⚠️ IMPORTANT**: Do not skip the `pip install -e .` step! This editable install is **required** for the notebooks to work correctly. Without it, you'll get `ModuleNotFoundError: No module named 'email_assistant'` errors when running the notebooks.
+
 ## Structure 
 
 The repo is organized into the 4 sections, with a notebook for each and accompanying code in the `src/email_assistant` directory.
