@@ -531,7 +531,7 @@ def interrupt_handler(state: State, store: BaseStore) -> Command[Literal["llm_ca
     return Command(goto=goto, update=update)
 
 # Conditional edge function
-def should_continue(state: State, store: BaseStore) -> Literal["interrupt_handler", END]:
+def should_continue(state: State, store: BaseStore) -> Literal["interrupt_handler", "__end__"]:
     """Route to tool handler, or end if Done tool called"""
     messages = state["messages"]
     last_message = messages[-1]

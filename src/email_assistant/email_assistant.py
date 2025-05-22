@@ -12,7 +12,6 @@ from src.email_assistant.utils import parse_email, format_email_markdown
 from langgraph.graph import StateGraph, START, END
 from langgraph.types import Command
 from dotenv import load_dotenv
-
 load_dotenv(".env")
 
 # Get tools
@@ -48,7 +47,7 @@ def llm_call(state: State):
         ]
     }
 
-def tool_node(state: dict):
+def tool_node(state: State):
     """Performs the tool call"""
 
     result = []
@@ -59,7 +58,7 @@ def tool_node(state: dict):
     return {"messages": result}
 
 # Conditional edge function
-def should_continue(state: State) -> Literal["Action", END]:
+def should_continue(state: State) -> Literal["Action", "__end__"]:
     """Route to Action, or end if Done tool called"""
     messages = state["messages"]
     last_message = messages[-1]

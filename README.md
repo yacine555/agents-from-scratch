@@ -55,6 +55,8 @@ $ python3 -m pip install --upgrade pip
 $ pip install -e .
 ```
 
+> **⚠️ IMPORTANT**: Do not skip the `pip install -e .` step! This editable install is **required** for the notebooks to work correctly. Without it, you'll get `ModuleNotFoundError: No module named 'email_assistant'` errors when running the notebooks.
+
 ## Structure 
 
 The repo is organized into the 4 sections, with a notebook for each and accompanying code in the `src/email_assistant` directory.
@@ -147,6 +149,18 @@ The available implementations for testing are:
 - `email_assistant_hitl` - Human-in-the-loop version
 - `email_assistant_hitl_memory` - Memory-enabled HITL version
 - `email_assistant_hitl_memory_gmail` - Gmail-integrated version
+
+### Testing Notebooks
+
+You can also run tests to verify all notebooks execute without errors:
+
+```shell
+# Run all notebook tests
+python tests/test_notebooks.py
+
+# Or run via pytest
+pytest tests/test_notebooks.py -v
+```
 
 ## Future Extensions
 
