@@ -1,3 +1,4 @@
+import os
 from typing import Literal
 from langchain.chat_models import init_chat_model
 from langchain.tools import tool
@@ -13,7 +14,7 @@ def write_email(to: str, subject: str, content: str) -> str:
     # Placeholder response - in real app would send email
     return f"Email sent to {to} with subject '{subject}' and content: {content}"
 
-llm = init_chat_model("openai:gpt-4.1", temperature=0)
+llm = init_chat_model(os.getenv("LLM_MODEL"), temperature=0)
 model_with_tools = llm.bind_tools([write_email], tool_choice="required")
 
 def call_llm(state: MessagesState) -> MessagesState:
@@ -44,6 +45,7 @@ def should_continue(state: MessagesState) -> Literal["run_tool", END]:
     # Otherwise, we stop (reply to the user)
     return END
 
+print("Build graph:")
 workflow = StateGraph(MessagesState)
 workflow.add_node("call_llm", call_llm)
 workflow.add_node("run_tool", run_tool)
