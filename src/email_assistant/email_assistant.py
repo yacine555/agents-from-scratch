@@ -14,6 +14,8 @@ from langgraph.types import Command
 from dotenv import load_dotenv
 load_dotenv(".env")
 
+print(os.getenv("LLM_MODEL"))
+
 # Get tools
 tools = get_tools()
 tools_by_name = get_tools_by_name(tools)
@@ -160,3 +162,17 @@ overall_workflow = (
 )
 
 email_assistant = overall_workflow.compile()
+
+
+
+email_input = {
+    "author": "System Admin <sysadmin@company.com>",
+    "to": "Development Team <dev@company.com>",
+    "subject": "Scheduled maintenance - database downtime",
+    "email_thread": "Hi team,\n\nThis is a reminder that we'll be performing scheduled maintenance on the production database tonight from 2AM to 4AM EST. During this time, all database services will be unavailable.\n\nPlease plan your work accordingly and ensure no critical deployments are scheduled during this window.\n\nThanks,\nSystem Admin Team"
+}
+
+# Run the agent
+response = email_assistant.invoke({"email_input": email_input})
+for m in response["messages"]:
+    m.pretty_print()
